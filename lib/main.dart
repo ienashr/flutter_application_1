@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'data_model.dart';
 import 'data_form_page.dart';
+import 'package:http/http.dart' as http;
+
 
 void main() {
   runApp(MyApp());
@@ -58,17 +60,29 @@ class MyWidget extends StatelessWidget {
                             ),
                             SizedBox(height: 8),
                             Text(data.description),
+
                           ],
                         ),
+
                       ),
+                      
+                      IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        // Call the API to delete the item
+                        _deleteItem(data); // Implement this method to delete the item
+                      },
+                    ),
+
                     ],
                   ),
                 );
               },
             );
           }
-        },
+        }, 
       ),
+      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // When the user taps the FloatingActionButton, navigate to the DataFormPage
@@ -79,3 +93,20 @@ class MyWidget extends StatelessWidget {
     );
   }
 }
+
+ void _deleteItem(DataModel data) async {
+    final String apiUrl = 'https://directus-ienas.cloud.programmercepat.com/items/news'; // Replace with the delete API endpoint URL
+
+    try {
+      final response = await http.delete(Uri.parse('$apiUrl/${data.id}'));
+      if (response.statusCode == 200) {
+        print('Item deleted successfully!');
+      } else {
+        print('Error deleting item: ${response.statusCode}');
+        // You can show an error message to the user if needed.
+      }
+    } catch (e) {
+      print('Error deleting item: $e');
+      // You can show an error message to the user if needed.
+    }
+  }
