@@ -1,7 +1,6 @@
-import 'dart:ffi';
 
 class DataModel {
-  final Int id;
+  final int id;
   final String title;
   final String description;
   final String image;

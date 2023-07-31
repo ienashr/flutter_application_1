@@ -5,19 +5,21 @@ import 'dart:convert';
 
 
 class DataFormPage extends StatefulWidget {
+  const DataFormPage({super.key});
+
   @override
   _DataFormPageState createState() => _DataFormPageState();
 }
 
 class _DataFormPageState extends State<DataFormPage> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _imageController = TextEditingController(); // New controller for image URL
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController(); // New controller for image URL
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Data')),
+      appBar: AppBar(title: const Text('Add Data')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -25,25 +27,25 @@ class _DataFormPageState extends State<DataFormPage> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(labelText: 'Description'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _imageController,
-              decoration: InputDecoration(labelText: 'Image URL'),
+              decoration: const InputDecoration(labelText: 'Image URL'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 // You can handle form submission here
                 _submitData();
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         ),
@@ -58,7 +60,7 @@ Future<void> _submitData() async {
     final String imageUrl = _imageController.text;
 
     // Define the API endpoint URL
-    final String apiUrl = 'https://directus-ienas.cloud.programmercepat.com/items/news';
+    const String apiUrl = 'https://directus-ienas.cloud.programmercepat.com/items/news';
 
     // Create a Map to hold the form data
     final Map<String, dynamic> formData = {

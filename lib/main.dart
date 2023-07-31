@@ -1,34 +1,40 @@
+
 import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'data_model.dart';
 import 'data_form_page.dart';
 import 'package:http/http.dart' as http;
+import 'edit_page.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyWidget(),
     );
   }
 }
 
 class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     // ... The code for the FutureBuilder and UI goes here ...
       return Scaffold(
-      appBar: AppBar(title: Text('API Data')),
+      appBar: AppBar(title: const Text('API Data')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: fetchData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -40,7 +46,7 @@ class MyWidget extends StatelessWidget {
                 // Apply consistent styles using a Card with a Column
                 return Card(
                   elevation: 2,
-                  margin: EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -56,21 +62,37 @@ class MyWidget extends StatelessWidget {
                           children: [
                             Text(
                               data.title,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(data.description),
 
                           ],
                         ),
 
-                      ),
+                      ), IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // Navigate to the edit page with the data for editing
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(data: data),
+                ),
+              ).then((success) {
+                // After editing, refresh the data if the edit was successful.
+                if (success == true) {
+                  fetchData(); // Call the fetch data method again to refresh the data.
+                }
+              });
+            },
+          ),
                       
                       IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                       onPressed: () {
                         // Call the API to delete the item
-                        _deleteItem(data); // Implement this method to delete the item
+                        _deleteItem(data.id); // Implement this method to delete the item
                       },
                     ),
 
@@ -86,27 +108,26 @@ class MyWidget extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // When the user taps the FloatingActionButton, navigate to the DataFormPage
-          Navigator.push(context, MaterialPageRoute(builder: (context) => DataFormPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const DataFormPage()));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
- void _deleteItem(DataModel data) async {
-    final String apiUrl = 'https://directus-ienas.cloud.programmercepat.com/items/news'; // Replace with the delete API endpoint URL
+ void _deleteItem(int id) async {
+    const String apiUrl = 'https://directus-ienas.cloud.programmercepat.com/items/news';
 
     try {
-      final response = await http.delete(Uri.parse('$apiUrl/${data.id}'));
+      final response = await http.delete(Uri.parse('$apiUrl/$id'));
       if (response.statusCode == 200) {
         print('Item deleted successfully!');
       } else {
         print('Error deleting item: ${response.statusCode}');
-        // You can show an error message to the user if needed.
       }
     } catch (e) {
       print('Error deleting item: $e');
-      // You can show an error message to the user if needed.
     }
   }
+
